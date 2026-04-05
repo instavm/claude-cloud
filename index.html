@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude History Visualizer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <!-- Header -->
+    <header>
+      <div class="header-left">
+        <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <button class="header-title" id="header-title-btn">Claude History</button>
+      </div>
+      <div class="header-right">
+        <a href="https://github.com/instavm/claude-cloud" target="_blank" rel="noopener" class="header-link" title="GitHub">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+        </a>
+        <button class="header-link" id="refresh-btn" title="Upload new file">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
+        <a href="https://instavm.io" target="_blank" rel="noopener" class="built-with">Built with <strong>InstaVM</strong> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+      </div>
+    </header>
+
+    <!-- Upload / Landing -->
+    <section id="upload-section">
+      <div class="landing-hero">
+        <h1 class="landing-heading">Visualize your conversations.</h1>
+        <p class="landing-sub">Deep dive into your Claude history. Discover patterns, word connections, and emotional trends in your chat logs.</p>
+      </div>
+
+      <div class="upload-area" id="drop-zone">
+        <div class="upload-inner">
+          <div class="upload-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <h2 class="upload-title">Upload Claude History</h2>
+          <p class="upload-sub-text">Drag and drop your <code>history.jsonl</code> file here</p>
+
+          <div class="file-location-box">
+            <div class="file-location-header">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <span>File Location: <code>~/.claude/history.jsonl</code></span>
+            </div>
+            <div class="help-cards">
+              <div class="help-card">
+                <div class="help-step">1</div>
+                <strong>Show Hidden Files</strong>
+                <p>In Finder, press <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>.</kbd> to toggle hidden folders like <code>.claude</code></p>
+              </div>
+              <div class="help-card">
+                <div class="help-step">2</div>
+                <strong>Go to Folder</strong>
+                <p>Press <kbd>Shift</kbd> + <kbd>Cmd</kbd> + <kbd>G</kbd> and paste <code>~/.claude</code> to jump directly there.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <input type="file" id="file-input" accept=".jsonl,.json" hidden>
+      </div>
+
+      <div class="feature-cards">
+        <div class="feature-card">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+          <h3>Word Cloud</h3>
+          <p>See your most used terms in a beautiful layout.</p>
+        </div>
+        <div class="feature-card">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          <h3>Connection Graph</h3>
+          <p>Visualize how your thoughts and topics connect.</p>
+        </div>
+        <div class="feature-card">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          <h3>Emotion Trends</h3>
+          <p>Analyze the sentiment of your interactions.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="hidden">
+
+      <!-- Stats -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">TOTAL INPUTS</span>
+            <span class="stat-value" id="stat-total">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">PROJECTS</span>
+            <span class="stat-value" id="stat-projects">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">TOTAL WORDS</span>
+            <span class="stat-value" id="stat-words">0</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">AVG WORDS/MSG</span>
+            <span class="stat-value" id="stat-avgwords">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="wordcloud">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></svg>
+          Word Cloud
+        </button>
+        <button class="tab-btn" data-tab="force-graph">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Word Graph
+        </button>
+        <button class="tab-btn" data-tab="emotions">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+          Emotions
+        </button>
+        <button class="tab-btn" data-tab="timeline">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Timeline
+        </button>
+        <button class="tab-btn" data-tab="projects">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Projects
+        </button>
+        <button class="tab-btn" data-tab="particles">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+          Particle Flow
+        </button>
+      </nav>
+
+      <!-- Tab panels -->
+      <div class="tab-content active" id="tab-wordcloud">
+        <div class="panel">
+          <div class="panel-header"><h2>Word Cloud</h2></div>
+          <canvas id="wordcloud-canvas"></canvas>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-force-graph">
+        <div class="panel">
+          <div class="panel-header"><h2>Word Graph</h2></div>
+          <div id="force-graph-container"></div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-emotions">
+        <div class="panel">
+          <div class="panel-header"><h2>Emotional Tone</h2></div>
+          <div class="emotions-layout">
+            <div class="emotion-donut-wrap"><canvas id="emotion-donut"></canvas></div>
+          </div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <div class="panel-header"><h2>Emotion Over Time</h2></div>
+          <canvas id="emotion-timeline"></canvas>
+        </div>
+        <div class="emotion-bubbles" id="emotion-bubbles"></div>
+      </div>
+
+      <div class="tab-content" id="tab-timeline">
+        <div class="panel">
+          <div class="panel-header"><h2>Activity Heatmap</h2></div>
+          <div id="heatmap-container"></div>
+        </div>
+        <div class="two-col">
+          <div class="panel"><div class="panel-header"><h2>By Hour</h2></div><canvas id="hourly-chart"></canvas></div>
+          <div class="panel"><div class="panel-header"><h2>By Day</h2></div><canvas id="daily-chart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-projects">
+        <div class="two-col">
+          <div class="panel"><div class="panel-header"><h2>Distribution</h2></div><canvas id="project-pie"></canvas></div>
+          <div class="panel"><div class="panel-header"><h2>By Count</h2></div><canvas id="project-bar"></canvas></div>
+        </div>
+        <div class="panel" style="margin-top:12px">
+          <div class="panel-header"><h2>Project Activity Over Time</h2></div>
+          <div id="project-timeline-container"></div>
+        </div>
+      </div>
+
+      <div class="tab-content" id="tab-particles">
+        <div class="panel">
+          <div class="panel-header"><h2>Particle Flow</h2></div>
+          <canvas id="particle-canvas"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-left">
+        <svg class="footer-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Claude History Visualizer &copy; 2026</span>
+      </div>
+      <div class="footer-right">
+        <a href="https://instavm.io" target="_blank" rel="noopener" class="footer-badge">Powered by InstaVM <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
