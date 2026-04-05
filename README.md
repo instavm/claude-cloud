@@ -2,6 +2,8 @@
 
 Visualize your Claude Code `history.jsonl` — word clouds, connection graphs, emotion trends, timeline heatmaps, and more.
 
+![Demo](demo.gif)
+
 **All processing happens in your browser. Nothing is uploaded.**
 
 ## Usage
