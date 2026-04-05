@@ -19,6 +19,6 @@ Visualize your Claude Code `history.jsonl` — word clouds, connection graphs, e
 - **Projects** — distribution across projects
 - **Particle Flow** — animated word particles with connections
 
-## Built with
+## Deployed on
 
 [InstaVM](https://instavm.io)
