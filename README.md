@@ -1,4 +1,4 @@
-# Claude History Visualizer
+# Chat History with coding agents Visualizer
 
 Visualize your Claude Code `history.jsonl` — word clouds, connection graphs, emotion trends, timeline heatmaps, and more.
 
