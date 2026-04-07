@@ -23,4 +23,4 @@ Visualize your Claude Code `history.jsonl` — word clouds, connection graphs, e
 
 ## Deployed on
 
-[InstaVM](https://prophetic-tacky-bison.instavm.site/)
+[InstaVM](https://astute-soft-kudu.instavm.site/)
